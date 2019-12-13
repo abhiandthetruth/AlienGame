@@ -1,6 +1,7 @@
 import sys
 import pygame
-
+import threading
+from alien import Alien
 
 def check_keydown_events(event, comp):
     if event.key == pygame.K_RIGHT:
@@ -15,6 +16,8 @@ def check_keydown_events(event, comp):
             comp.ship.speed = 0
     elif event.key == pygame.K_SPACE:
         comp.fire_bullets()
+    elif event.key == pygame.K_q:
+        sys.exit()
 
 def check_keyup_events(event, ship):
     if event.key == pygame.K_RIGHT:
@@ -35,5 +38,29 @@ def update_screen(comp):
     comp.screen.fill(comp.conf.bg_color)
     for bullet in comp.bullets.sprites():
         bullet.draw_bullet()
+    t1 = threading.Thread(target=comp.aliens.draw, args=(comp.screen,))
+    t1.start()
+    t1.join()
     comp.ship.blitme()
     pygame.display.flip()
+
+def get_number_aliens_x(conf, alien_width):
+    available_space_x = conf.screen_width - 2 * alien_width
+    number_aliens_x = int(available_space_x/(2 * alien_width))
+    return number_aliens_x
+
+def get_number_rows(conf, ship_height, alien_height):
+    available_space_y = conf.screen_height - 3 * alien_height - ship_height
+    number_rows = int(available_space_y/(2 * alien_height))
+    return number_rows
+
+def create_fleet(comp):
+    alien = Alien(comp.conf, comp.screen)
+    number_aliens_x = get_number_aliens_x(comp.conf, alien.rect.width)
+    number_rows = get_number_rows(comp.conf, comp.ship.rect.height,
+        alien.rect.height)
+
+    #create the fleet of aliens
+    for row_number in range(number_rows):
+        for alien_number in range(number_aliens_x):
+            comp.create_alien(alien_number, row_number)
