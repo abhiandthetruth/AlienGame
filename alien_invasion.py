@@ -5,28 +5,27 @@ from settings import Settings
 from game_functions import *
 import threading
 
-def init_comp():
-    pygame.init()
-    conf = Settings()
-    screen = pygame.display.set_mode((conf.screen_width, 
-    conf.screen_height))
-    screen.fill(conf.bg_color)
-    pygame.display.set_caption(conf.title)
-    ship = Ship(screen)
-    bullets = Group()
-    return {
-        'conf':conf, 
-        'screen': screen, 
-        'ship': ship, 
-        'bullets': bullets
-    }
+class Components():
+    
+    def __init__(self):
+        pygame.init()
+        self.conf = Settings()
+        pygame.display.set_caption(self.conf.title)
+        self.screen = pygame.display.set_mode((self.conf.screen_width, 
+                    self.conf.screen_height))
+        self.screen.fill(self.conf.bg_color)
+        self.ship = Ship(self.screen)
+        self.bullets = Group()
 
 def run_game():
-    comp = init_comp()
+    comp = Components()
     while True:
         check_events(comp)
-        comp['bullets'].update()
-        comp['ship'].update()
+        comp.bullets.update()
+        for bullet in comp.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                comp.bullets.remove(bullet)
+        comp.ship.update()
         threading.Thread(target=update_screen, args=(comp,)).start()
 
 run_game()
