@@ -11,6 +11,8 @@ def run_game():
         check_events(comp)
         comp.update_bullets()
         comp.ship.update()
+        check_fleet_edges(comp.conf, comp.aliens)
+        comp.update_aliens()
         update_screen(comp)
         #threading.Thread(target=update_screen, args=(comp,)).start()
 

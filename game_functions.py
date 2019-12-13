@@ -54,6 +54,17 @@ def get_number_rows(conf, ship_height, alien_height):
     number_rows = int(available_space_y/(2 * alien_height))
     return number_rows
 
+def check_fleet_edges(conf, aliens):
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(conf, aliens)
+            break
+
+def change_fleet_direction(conf, aliens):
+    for alien in aliens.sprites():
+        alien.rect.y += conf.alien_drop_speed
+    conf.fleet_direction *= -1
+
 def create_fleet(comp):
     alien = Alien(comp.conf, comp.screen)
     number_aliens_x = get_number_aliens_x(comp.conf, alien.rect.width)

@@ -36,3 +36,6 @@ class Components():
         alien.rect.x = alien.x
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
+
+    def update_aliens(self):
+        self.aliens.update()
