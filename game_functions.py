@@ -1,6 +1,6 @@
 import sys
 import pygame
-from bullet import Bullet
+
 
 def check_keydown_events(event, comp):
     if event.key == pygame.K_RIGHT:
@@ -14,8 +14,7 @@ def check_keydown_events(event, comp):
         if comp.ship.speed < 0:
             comp.ship.speed = 0
     elif event.key == pygame.K_SPACE:
-        new_bullet = Bullet(comp.conf, comp.screen, comp.ship)
-        comp.bullets.add(new_bullet)
+        comp.fire_bullets()
 
 def check_keyup_events(event, ship):
     if event.key == pygame.K_RIGHT:
@@ -26,8 +25,6 @@ def check_keyup_events(event, ship):
 def check_events(comp):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.display.quit()
-            pygame.quit()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
             check_keydown_events(event, comp)    
