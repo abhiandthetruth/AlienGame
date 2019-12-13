@@ -1,37 +1,42 @@
 import sys
 import pygame
+from bullet import Bullet
 
-def check_keydown_events(event, ship):
+def check_keydown_events(event, comp):
     if event.key == pygame.K_RIGHT:
-        ship.moving_right = True
-    if event.key == pygame.K_LEFT:
-        ship.moving_left = True
-    if event.key == pygame.K_UP:
-        ship.speed += 0.1
-    if event.key == pygame.K_DOWN:
-        ship.speed -= 0.1
-    if(ship.speed < 0):
-        ship.speed = 0
+        comp['ship'].moving_right = True
+    elif event.key == pygame.K_LEFT:
+        comp['ship'].moving_left = True
+    elif event.key == pygame.K_UP:
+        comp['ship'].speed += 0.1
+    elif event.key == pygame.K_DOWN:
+        comp['ship'].speed -= 0.1
+        if comp['ship'].speed < 0:
+            comp['ship'].speed = 0
+    elif event.key == pygame.K_SPACE:
+        new_bullet = Bullet(comp['conf'], comp['screen'], comp['ship'])
+        comp['bullets'].add(new_bullet)
 
 def check_keyup_events(event, ship):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = False
-    if event.key == pygame.K_LEFT:
+    elif event.key == pygame.K_LEFT:
         ship.moving_left = False
 
-def check_events(ship):
+def check_events(comp):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.display.quit()
             pygame.quit()
             sys.exit()
-        if event.type == pygame.KEYDOWN:
-            check_keydown_events(event, ship)    
-        if event.type == pygame.KEYUP:
-            check_keyup_events(event, ship)
+        elif event.type == pygame.KEYDOWN:
+            check_keydown_events(event, comp)    
+        elif event.type == pygame.KEYUP:
+            check_keyup_events(event, comp['ship'])
             
-def update_screen(conf, screen, ship):
-    screen.fill(conf.bg_color)
-    ship.update()
-    ship.blitme()
+def update_screen(comp):
+    comp['screen'].fill(comp['conf'].bg_color)
+    for bullet in comp['bullets'].sprites():
+        bullet.draw_bullet()
+    comp['ship'].blitme()
     pygame.display.flip()
