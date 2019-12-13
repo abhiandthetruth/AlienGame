@@ -3,7 +3,9 @@ from pygame.sprite import Group
 from ship import Ship
 from bullet import Bullet
 from alien import Alien
+from game_stats import GameStats
 from settings import Settings
+from time import sleep
 
 class Components():
     
@@ -17,6 +19,7 @@ class Components():
         self.ship = Ship(self.screen)
         self.bullets = Group()
         self.aliens = Group()
+        self.stats = GameStats(self.conf)
 
     def update_ship(self):
         self.ship.update()
@@ -35,6 +38,13 @@ class Components():
             self.bullets.empty()
             self.conf.alien_speed_factor += 0.2
             self.conf.alien_drop_speed += 0.4
+    
+    def ship_hit(self):
+        self.stats.ships_left -= 1
+        self.aliens.empty()
+        self.bullets.empty()
+        self.ship.center_ship()
+        sleep(0.5)
 
     def fire_bullets(self):
         if len(self.bullets) < self.conf.bullets_allowed:
@@ -53,7 +63,7 @@ class Components():
         self.check_fleet_edges()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            print("Ship hit!")
+            self.ship_hit()
 
     def check_fleet_edges(self):
         for alien in self.aliens.sprites():

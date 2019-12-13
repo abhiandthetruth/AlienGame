@@ -3,7 +3,6 @@ from components import Components
 from game_functions import *
 import threading
 
-
 def run_game():
     comp = Components()
     create_fleet(comp)
