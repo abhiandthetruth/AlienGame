@@ -18,11 +18,23 @@ class Components():
         self.bullets = Group()
         self.aliens = Group()
 
+    def update_ship(self):
+        self.ship.update()
+
     def update_bullets(self):
         self.bullets.update()
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+        self.handle_collisions()
+
+    def handle_collisions(self):
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens,
+            True, True)
+        if len(self.aliens) == 0:
+            self.bullets.empty()
+            self.conf.alien_speed_factor += 0.2
+            self.conf.alien_drop_speed += 0.4
 
     def fire_bullets(self):
         if len(self.bullets) < self.conf.bullets_allowed:
@@ -38,4 +50,19 @@ class Components():
         self.aliens.add(alien)
 
     def update_aliens(self):
+        self.check_fleet_edges()
         self.aliens.update()
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            print("Ship hit!")
+
+    def check_fleet_edges(self):
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self.change_fleet_direction()
+                break
+
+    
+    def change_fleet_direction(self):
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.conf.alien_drop_speed
+        self.conf.fleet_direction *= -1

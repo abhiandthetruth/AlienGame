@@ -10,10 +10,10 @@ def run_game():
     while True:
         check_events(comp)
         comp.update_bullets()
-        comp.ship.update()
-        check_fleet_edges(comp.conf, comp.aliens)
+        comp.update_ship()
         comp.update_aliens()
+        if len(comp.aliens) == 0:
+            create_fleet(comp)
         update_screen(comp)
-        #threading.Thread(target=update_screen, args=(comp,)).start()
 
 run_game()
