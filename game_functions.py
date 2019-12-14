@@ -52,9 +52,7 @@ def update_screen(comp):
     comp.screen.fill(comp.conf.bg_color)
     for bullet in comp.bullets.sprites():
         bullet.draw_bullet()
-    t1 = threading.Thread(target=comp.aliens.draw, args=(comp.screen,))
-    t1.start()
-    t1.join()
+    comp.aliens.draw(comp.screen)
     comp.ship.blitme()
     comp.sb.show_score()
     if not comp.stats.game_active:

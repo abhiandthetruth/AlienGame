@@ -9,11 +9,17 @@ def run_game():
     while True:
         check_events(comp)
         if comp.stats.game_active:
-            comp.update_bullets()
-            comp.update_ship()
-            comp.update_aliens()
+            t1 = threading.Thread(target = comp.update_bullets())
+            t2 = threading.Thread(target = comp.update_ship())
+            t3 = threading.Thread(target = comp.update_aliens())
+            t1.start()
+            t2.start()
+            t3.start()
             if len(comp.aliens) == 0:
                 create_fleet(comp)
+            t1.join()
+            t2.join()
+            t3.join()
         update_screen(comp)
 
 run_game()

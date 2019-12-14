@@ -13,10 +13,7 @@ class Scoreboard():
         self.text_color = (30, 30 , 30)
         self.font = pygame.font.SysFont(None, 48)
         #initialize
-        self.prep_score()
-        self.prep_high_score()
-        self.prep_level()
-        self.prep_ships()
+        self.prep_all()
     
     def prep_all(self):
         self.prep_ships()
@@ -50,12 +47,6 @@ class Scoreboard():
         self.level_image_rect = self.level_image.get_rect()
         self.level_image_rect.right = self.score_rect.right
         self.level_image_rect.top = self.score_rect.bottom + 10
-
-    def show_score(self):
-        self.screen.blit(self.high_score_image, self.high_score_rect)
-        self.screen.blit(self.score_image, self.score_rect)
-        self.screen.blit(self.level_image, self.level_image_rect)
-        self.ships.draw(self.screen)
     
     def prep_ships(self):
         self.ships = Group()
@@ -64,3 +55,9 @@ class Scoreboard():
             ship.rect.x = 10 + ship_number * ship.rect.width
             ship.rect.y = 10
             self.ships.add(ship)
+
+    def show_score(self):
+        self.screen.blit(self.high_score_image, self.high_score_rect)
+        self.screen.blit(self.score_image, self.score_rect)
+        self.screen.blit(self.level_image, self.level_image_rect)
+        self.ships.draw(self.screen)
