@@ -6,6 +6,7 @@ from alien import Alien
 from game_stats import GameStats
 from settings import Settings
 from time import sleep
+from button  import Button
 
 class Components():
     
@@ -19,7 +20,10 @@ class Components():
         self.ship = Ship(self.screen)
         self.bullets = Group()
         self.aliens = Group()
+        self.down_increment = 0
+        self.horizontal_increment = 0
         self.stats = GameStats(self.conf)
+        self.play_button = Button(self.conf, self.screen, "Play")
 
     def update_ship(self):
         self.ship.update()
@@ -36,8 +40,8 @@ class Components():
             True, True)
         if len(self.aliens) == 0:
             self.bullets.empty()
-            self.conf.alien_speed_factor += 0.2
-            self.conf.alien_drop_speed += 0.4
+            self.horizontal_increment += 0.2
+            self.down_increment += 0.4
     
     def ship_hit(self):
         if self.stats.ships_left > 0:
@@ -64,7 +68,7 @@ class Components():
 
     def update_aliens(self):
         self.check_fleet_edges()
-        self.aliens.update()
+        self.aliens.update(self.horizontal_increment)
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self.ship_hit()
         self.check_aliens_bottom()
@@ -84,5 +88,14 @@ class Components():
 
     def change_fleet_direction(self):
         for alien in self.aliens.sprites():
-            alien.rect.y += self.conf.alien_drop_speed
+            alien.rect.y += self.conf.alien_drop_speed + self.down_increment
         self.conf.fleet_direction *= -1
+    
+    def reset(self):
+        self.stats.reset_stats()
+        self.aliens.empty()
+        self.bullets.empty()
+        self.ship.center_ship()
+        self.horizontal_increment= 0
+        self.down_increment = 0
+        self.stats.game_active = True
