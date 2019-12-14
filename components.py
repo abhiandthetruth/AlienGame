@@ -40,11 +40,14 @@ class Components():
             self.conf.alien_drop_speed += 0.4
     
     def ship_hit(self):
-        self.stats.ships_left -= 1
-        self.aliens.empty()
-        self.bullets.empty()
-        self.ship.center_ship()
-        sleep(0.5)
+        if self.stats.ships_left > 0:
+            self.stats.ships_left -= 1
+            self.aliens.empty()
+            self.bullets.empty()
+            self.ship.center_ship()
+            sleep(0.5)
+        else:
+            self.stats.game_active = False
 
     def fire_bullets(self):
         if len(self.bullets) < self.conf.bullets_allowed:
@@ -64,6 +67,7 @@ class Components():
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self.ship_hit()
+        self.check_aliens_bottom()
 
     def check_fleet_edges(self):
         for alien in self.aliens.sprites():
@@ -71,7 +75,13 @@ class Components():
                 self.change_fleet_direction()
                 break
 
-    
+    def check_aliens_bottom(self):
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                self.ship_hit()
+                break
+
     def change_fleet_direction(self):
         for alien in self.aliens.sprites():
             alien.rect.y += self.conf.alien_drop_speed

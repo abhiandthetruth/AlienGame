@@ -8,11 +8,12 @@ def run_game():
     create_fleet(comp)
     while True:
         check_events(comp)
-        comp.update_bullets()
-        comp.update_ship()
-        comp.update_aliens()
-        if len(comp.aliens) == 0:
-            create_fleet(comp)
+        if comp.stats.game_active:
+            comp.update_bullets()
+            comp.update_ship()
+            comp.update_aliens()
+            if len(comp.aliens) == 0:
+                create_fleet(comp)
         update_screen(comp)
 
 run_game()
