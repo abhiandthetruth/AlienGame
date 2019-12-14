@@ -39,7 +39,8 @@ def check_events(comp):
             check_play_button(comp, mouse_x, mouse_y)
 
 def check_play_button(comp, mouse_x, mouse_y):
-    if comp.play_button.rect.collidepoint(mouse_x, mouse_y):
+    button_clicked = comp.play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not comp.stats.game_active:
         comp.reset()
         
     
