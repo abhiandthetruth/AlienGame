@@ -1,8 +1,11 @@
 import pygame
 from settings import Settings
-class Ship():
+from pygame.sprite import Sprite
+
+class Ship(Sprite):
 
     def __init__(self, screen):
+        super().__init__()
         self.conf = Settings()
         self.screen = screen
         self.image = pygame.image.load('images\ship.bmp')

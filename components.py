@@ -47,11 +47,14 @@ class Components():
                     self.conf.alien_points)
             self.sb.prep_score()
             self.check_high_score()
+        
         if len(collisions.values()) > 0 and len(self.aliens) == 0:
             self.bullets.empty()
             self.horizontal_increment *= self.conf.speedup_scale
             self.down_increment *= self.conf.speedup_scale
             self.point_increment *= self.conf.score_scale
+            self.stats.level += 1
+            self.sb.prep_level()
     
     def check_high_score(self):
         if self.stats.score > self.stats.high_score:
@@ -64,6 +67,7 @@ class Components():
             self.aliens.empty()
             self.bullets.empty()
             self.ship.center_ship()
+            self.sb.prep_ships()
             sleep(0.5)
         else:
             self.stats.game_active = False
@@ -115,5 +119,5 @@ class Components():
         self.horizontal_increment= 1
         self.down_increment = 1
         self.point_increment = 1
-        self.sb.prep_score()
+        self.sb.prep_all()
         self.stats.game_active = True
