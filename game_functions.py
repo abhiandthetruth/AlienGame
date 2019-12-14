@@ -19,6 +19,9 @@ def check_keydown_events(event, comp):
         comp.fire_bullets()
     elif event.key == pygame.K_q:
         sys.exit()
+    elif event.key == pygame.K_p:
+        pygame.mouse.set_visible(False)
+        comp.reset()
 
 def check_keyup_events(event, ship):
     if event.key == pygame.K_RIGHT:
@@ -41,6 +44,7 @@ def check_events(comp):
 def check_play_button(comp, mouse_x, mouse_y):
     button_clicked = comp.play_button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked and not comp.stats.game_active:
+        pygame.mouse.set_visible(False)
         comp.reset()
         
     
@@ -52,6 +56,7 @@ def update_screen(comp):
     t1.start()
     t1.join()
     comp.ship.blitme()
+    comp.sb.show_score()
     if not comp.stats.game_active:
         comp.screen.fill(comp.conf.bg_color)
         comp.play_button.draw_button()

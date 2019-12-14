@@ -7,6 +7,7 @@ from game_stats import GameStats
 from settings import Settings
 from time import sleep
 from button  import Button
+from scoreboard import Scoreboard
 
 class Components():
     
@@ -20,10 +21,12 @@ class Components():
         self.ship = Ship(self.screen)
         self.bullets = Group()
         self.aliens = Group()
-        self.down_increment = 0
-        self.horizontal_increment = 0
+        self.down_increment = 1
+        self.horizontal_increment = 1
+        self.point_increment = 1
         self.stats = GameStats(self.conf)
         self.play_button = Button(self.conf, self.screen, "Play")
+        self.sb = Scoreboard(self.conf, self.screen, self.stats)
 
     def update_ship(self):
         self.ship.update()
@@ -38,10 +41,16 @@ class Components():
     def handle_collisions(self):
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens,
             True, True)
-        if len(self.aliens) == 0:
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += (self.point_increment * 
+                    self.conf.alien_points)
+            self.sb.prep_score()
+        if len(collisions.values()) > 0 and len(self.aliens) == 0:
             self.bullets.empty()
-            self.horizontal_increment += 0.2
-            self.down_increment += 0.4
+            self.horizontal_increment *= self.conf.speedup_scale
+            self.down_increment *= self.conf.speedup_scale
+            self.point_increment *= self.conf.score_scale
     
     def ship_hit(self):
         if self.stats.ships_left > 0:
@@ -52,6 +61,7 @@ class Components():
             sleep(0.5)
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     def fire_bullets(self):
         if len(self.bullets) < self.conf.bullets_allowed:
@@ -88,7 +98,7 @@ class Components():
 
     def change_fleet_direction(self):
         for alien in self.aliens.sprites():
-            alien.rect.y += self.conf.alien_drop_speed + self.down_increment
+            alien.rect.y += self.conf.alien_drop_speed * self.down_increment
         self.conf.fleet_direction *= -1
     
     def reset(self):
@@ -96,6 +106,8 @@ class Components():
         self.aliens.empty()
         self.bullets.empty()
         self.ship.center_ship()
-        self.horizontal_increment= 0
-        self.down_increment = 0
+        self.horizontal_increment= 1
+        self.down_increment = 1
+        self.point_increment = 1
+        self.sb.prep_score()
         self.stats.game_active = True

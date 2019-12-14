@@ -19,5 +19,10 @@ class Settings():
 
         #alien configuration
         self.alien_speed_factor = float(1)
-        self.alien_drop_speed = float(40)
+        self.alien_drop_speed = float(20)
+        self.alien_points = 50
         self.fleet_direction = 1    #1 for right and -1 for left
+
+        #spedup
+        self.speedup_scale = 1.1
+        self.score_scale = 1.5
