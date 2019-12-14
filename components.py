@@ -46,12 +46,18 @@ class Components():
                 self.stats.score += (self.point_increment * 
                     self.conf.alien_points)
             self.sb.prep_score()
+            self.check_high_score()
         if len(collisions.values()) > 0 and len(self.aliens) == 0:
             self.bullets.empty()
             self.horizontal_increment *= self.conf.speedup_scale
             self.down_increment *= self.conf.speedup_scale
             self.point_increment *= self.conf.score_scale
     
+    def check_high_score(self):
+        if self.stats.score > self.stats.high_score:
+            self.stats.high_score = self.stats.score
+            self.sb.prep_high_score()
+
     def ship_hit(self):
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1

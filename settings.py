@@ -24,5 +24,5 @@ class Settings():
         self.fleet_direction = 1    #1 for right and -1 for left
 
         #spedup
-        self.speedup_scale = 1.1
+        self.speedup_scale = 1.5
         self.score_scale = 1.5
