@@ -1,6 +1,7 @@
 import pygame
 from components import Components
 from game_functions import *
+from time import sleep
 import threading
 
 def run_game():
@@ -17,6 +18,7 @@ def run_game():
             t3.start()
             if len(comp.aliens) == 0:
                 create_fleet(comp)
+            sleep(0.001)
             t1.join()
             t2.join()
             t3.join()
